@@ -1,0 +1,15 @@
+name: field3
+type: short
+length: 2
+comment:
+variableFields:
+- id: 1
+  name: nestedField 1
+  type: string
+  length: -1
+  comment:
+- id: 2
+  name: nestedField 1
+  type: string
+  length: -1
+  comment:
