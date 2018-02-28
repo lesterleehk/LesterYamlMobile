@@ -2,6 +2,7 @@ package Test;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 
 import org.openqa.selenium.By;
 
@@ -17,7 +18,13 @@ import model.TestStep;
 
 public class TestCaseContainer {
 	TestCase testCase = null;
-
+	
+	
+	public TestCaseContainer(String yamlpath) {
+		this.yamlFilePath=yamlpath;
+		
+	}
+	
 	public TestCase getTestCase() {
 		return testCase;
 	}
