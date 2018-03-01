@@ -15,8 +15,7 @@ import model.TestStep;
 
 public class TestCaseContainer {
 	TestCase testCase = null;
-	//test fetch
-	
+	//push head
 	public TestCaseContainer(String yamlpath) {
 		this.yamlFilePath=yamlpath;
 		
