@@ -1,0 +1,12 @@
+user_id: yuenlee.hk@gmail.com
+user_pwd: 12345678
+test_case_id: ContactSync
+testSteps:
+- element_info: //*[@resource-id='com.eventxtra.eventx:id/imgLogo']
+  find_type: xpath
+  operate_type: click
+- element_info: //*[@resource-id='com.eventxtra.eventx:id/connection_status_bar']
+  find_type: xpath
+  operate_type: gettext
+  checkpoint: 
+   textPresented: Í¬²½

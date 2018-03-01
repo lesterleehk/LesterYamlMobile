@@ -1,0 +1,35 @@
+user_id: yuenlee.hk@gmail.com
+user_pwd: 12345678
+test_case_id: LogoutThenLogin
+testSteps:
+- element_info: //*[@resource-id='com.eventxtra.eventx:id/settings']
+  find_type: xpath
+  operate_type: click
+- element_info: //android.widget.TextView[contains(@text, 'µÇ³ö')]
+  find_type: xpath
+  operate_type: click
+- element_info: //android.widget.Button[@text='ÊÇ']
+  find_type: xpath
+  operate_type: click
+- element_info: //*[@resource-id='com.eventxtra.eventx:id/btnSignIn']
+  find_type: xpath
+  operate_type: click
+- element_info: //*[@resource-id='com.eventxtra.eventx:id/etEmail']
+  find_type: xpath
+  operate_type: send_keys
+  text: yuenlee.hk@gmail.com
+- element_info: //*[@resource-id='com.eventxtra.eventx:id/btnSignIn']
+  find_type: xpath
+  operate_type: click
+- element_info: //*[@resource-id='com.eventxtra.eventx:id/etPassword']
+  find_type: xpath
+  operate_type: send_keys
+  text: 12345678
+- element_info: //*[@resource-id='com.eventxtra.eventx:id/btnSignIn']
+  find_type: xpath
+  operate_type: click
+- element_info: //*[@resource-id='android:id/button1']
+  find_type: xpath
+  operate_type: click  
+  
+  
