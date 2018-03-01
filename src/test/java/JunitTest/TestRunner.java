@@ -27,7 +27,9 @@ import AppiumSupport.TraceLog;
 import Report.ScreenShotOnFailed;
 import Report.TestReport;
 import Test.TestCaseContainer;
+import Test.TestSuiteContainer;
 import Utils.DateTimeUtils;
+import Utils.OpenCSV;
 import Utils.PropertiesFileUtils;
 import Utils.ReflectionUtils;
 import io.appium.java_client.AppiumDriver;
@@ -46,12 +48,12 @@ public class TestRunner {
 	private String user_id;
 
 	private int thisTestNo;
-	private TestCaseContainer testCaseContainer;
+	private TestSuiteContainer testSuiteContainer;
 
-	public TestRunner(TestCaseContainer testCaseContainer, String objID) {
-		this.testCaseContainer = testCaseContainer;
-		testCaseContainer.setTestRunner(this);
-		this.user_id=testCaseContainer.getTestCase().getUser_id();
+	public TestRunner(TestSuiteContainer testSuiteContainer, String objID) {
+		this.testSuiteContainer = testSuiteContainer;
+		testSuiteContainer.setTestRunner(this);
+		this.user_id=testSuiteContainer.getTestSuiteName();
 		// set user
 	}
 
@@ -63,8 +65,8 @@ public class TestRunner {
 		}
 	}
 
-	public TestCaseContainer getTestDataObject() {
-		return testCaseContainer;
+	public TestSuiteContainer getTestSuiteContainer() {
+		return this.getTestSuiteContainer();
 	}
 
 	public static TestCaseContainer getTestDataObject(String ID) {
@@ -119,21 +121,16 @@ public class TestRunner {
 			return null;
 		}
 		Collection<Object[]> objList = new ArrayList<Object[]>();
-		  
-		TestCaseContainer testcase = new TestCaseContainer();
-		testcase.setYamlFilePath("ContactSync.yaml");
-		testcase.loadYaml();
-		TestCaseContainer testcase2 = new TestCaseContainer();
-		testcase2.setYamlFilePath("LogoutThenLogin.yaml");
-		testcase2.loadYaml();
+		OpenCSV oc = new OpenCSV();
+        ArrayList<TestSuiteContainer> testSuiteContainerList=oc.CreateAllTestSuiteContainer(); 
 		
-		Object objectArray[]=new Object[] { testcase, testcase.getTest_case_id()};
-		Object objectArray2[]=new Object[] { testcase2, testcase2.getTest_case_id()};
-		objList.add(objectArray);
-		objList.add(objectArray2);
+		for (TestSuiteContainer testSuiteContainer: testSuiteContainerList) {
+			Object objectArray[]=new Object[] { testSuiteContainer, testSuiteContainer.getTestSuiteName()};
+			objList.add(objectArray);
+		}
 
-
-		totalTestSuite = objList.size();
+		
+		totalTestSuite = testSuiteContainerList.size();
 		return objList;
 	}
 
@@ -142,30 +139,31 @@ public class TestRunner {
 		double startTime, endtime, totaltime;
 		startTime = System.currentTimeMillis();
 		// 1. print test case info (author, test case no.)
-		System.out.print("Starting: (" + testSuiteNo + "/" + totalTestSuite + ")\t" + testCaseContainer.toString() + "\t");
+		System.out.print("Starting: (" + testSuiteNo + "/" + totalTestSuite + ")\t" + testSuiteContainer.toString() + "\t");
 		System.out.println(DateTimeUtils.getCurrentTimeAsStr());
 		thisTestNo = testSuiteNo;
 		testSuiteNo++;
-
-		try {
-			this.testReport.setAppiumDriver(driverHandler.getAppiumDriver());
-			this.screenShootRule.setAppiumDriver(driverHandler.getAppiumDriver());
-			
-			
-			// 2. execute the test case
-			if (executeTestMethod(testCaseContainer, driverHandler.getAppiumDriver())) {
-				// 3. do tasks after execution, will not reach this code if
-				// exception occur
-				// logger.succeeded(TestDataObject);
+		for (TestCaseContainer testCaseContainer: testSuiteContainer.getTestCases()) {
+			try {
+				this.testReport.setAppiumDriver(driverHandler.getAppiumDriver());
+				this.screenShootRule.setAppiumDriver(driverHandler.getAppiumDriver());
+				
+				
+				// 2. execute the test case
+				if (executeTestMethod(testCaseContainer, driverHandler.getAppiumDriver())) {
+					// 3. do tasks after execution, will not reach this code if
+					// exception occur
+					// logger.succeeded(TestDataObject);
+				}
+			} catch (Exception e) {
+				handFailCaseReporting(e, testCaseContainer);
+			} finally {
+				// 5. do finish task
+				// logger.finished(TestDataObject);
+				endtime = System.currentTimeMillis();
+				totaltime = (endtime - startTime) / 1000;
+				System.out.println("Finished (" + thisTestNo + "/" + totalTestSuite + ") " + testCaseContainer.toString() + " in " + totaltime + " secs ");
 			}
-		} catch (Exception e) {
-			handFailCaseReporting(e, testCaseContainer);
-		} finally {
-			// 5. do finish task
-			// logger.finished(TestDataObject);
-			endtime = System.currentTimeMillis();
-			totaltime = (endtime - startTime) / 1000;
-			System.out.println("Finished (" + thisTestNo + "/" + totalTestSuite + ") " + testCaseContainer.toString() + " in " + totaltime + " secs ");
 		}
 	}
 
@@ -185,7 +183,7 @@ public class TestRunner {
 
 	private void handFailCaseReporting(Exception e, TestCaseContainer obj) {
 		numFailCases++;
-		System.out.println("FAILED (" + thisTestNo + "/" + totalTestSuite + ") " + testCaseContainer.toString());
+		System.out.println("FAILED (" + thisTestNo + "/" + totalTestSuite + ") " + testSuiteContainer.getTestSuiteName());
 		org.junit.Assert.fail(e.getMessage());
 	}
 
