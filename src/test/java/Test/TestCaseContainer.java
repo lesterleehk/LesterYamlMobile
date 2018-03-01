@@ -3,12 +3,9 @@ package Test;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
-
 import org.openqa.selenium.By;
-
 import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
-
 import JunitTest.TestRunner;
 import PageObjects.TestStepExec;
 import io.appium.java_client.AppiumDriver;
@@ -95,7 +92,7 @@ public class TestCaseContainer {
 	}
 	
     public void backToHome(AppiumDriver driver) {
-    	String xpath="//android.widget.ImageButton[@content-desc='œÚ…œûg”[']";
+    	String xpath="//android.widget.ImageButton[@content-desc='√è√≤√â√è≈æg√ì[']";
     	By by = By.xpath(xpath);
         MobileElement   backBtn;
     	do {
