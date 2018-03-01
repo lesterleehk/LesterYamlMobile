@@ -23,22 +23,16 @@ public class OpenCSV {
 	
     public static void main(String[] args) throws Exception {
         OpenCSV oc = new OpenCSV();
-        
+        ArrayList<TestSuiteContainer> t=oc.CreateAllTestSuiteContainer();
 
       
     }
 
     public String yamlDir = System.getProperty("user.dir") + "/Yaml/";
 
-    public ArrayList<TestSuiteContainer> CreateAllTestSuiteContainer(String csvFile)  {
+    public ArrayList<TestSuiteContainer> CreateAllTestSuiteContainer()  {
         
     	ArrayList<TestSuiteContainer> testcases = new ArrayList<TestSuiteContainer>();
-    	
-//    	ArrayList<File> files= new ArrayList<File>();
-//    	for (String fileName:fileNameList) {
-//    		files.add(new File(yamlDir+fileName));
-//    	}
-    	
     	File file= new File(System.getProperty("user.dir")+"/conf/TestSuiteList.csv");
     	
     		try {
@@ -47,7 +41,7 @@ public class OpenCSV {
 				list = reader.readAll();
 				
 				String[] s;
-				for (int i =0; i<list.size(); i++) {
+				for (int i =1; i<list.size(); i++) {// skip first row as it is test detail
 					s= list.get(i);
 					int size = s.length;
 					List<String> yamlpath=new ArrayList<String>();;
@@ -67,8 +61,6 @@ public class OpenCSV {
 				e.printStackTrace();
 			}
 
-            
-    
     	return testcases;
 
     }
